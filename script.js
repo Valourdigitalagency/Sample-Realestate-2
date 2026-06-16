@@ -2,6 +2,9 @@ const tabs = document.querySelectorAll(".spec-tab");
 const panels = document.querySelectorAll(".spec-panel");
 const form = document.querySelector(".lead-form");
 const galleryTrack = document.querySelector("[data-gallery-track]");
+const header = document.querySelector(".site-header");
+const menuToggle = document.querySelector(".menu-toggle");
+const menuLinks = document.querySelectorAll(".site-nav a, .header-actions a");
 
 const revealTargets = document.querySelectorAll(
   [
@@ -63,6 +66,34 @@ if (galleryTrack && !galleryTrack.dataset.cloned) {
     galleryTrack.appendChild(card.cloneNode(true));
   });
   galleryTrack.dataset.cloned = "true";
+}
+
+if (header && menuToggle) {
+  const closeMenu = () => {
+    header.classList.remove("menu-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open menu");
+  };
+
+  menuToggle.addEventListener("click", () => {
+    const isOpen = header.classList.toggle("menu-open");
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menuToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+  });
+
+  menuLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (window.matchMedia("(max-width: 720px)").matches) {
+        closeMenu();
+      }
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    if (!window.matchMedia("(max-width: 720px)").matches) {
+      closeMenu();
+    }
+  });
 }
 
 tabs.forEach((tab) => {
